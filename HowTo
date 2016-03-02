@@ -1,0 +1,7 @@
+- Installer l'ide Arduino (testé avec la version 1.6.8)
+- Une fois lancé, aller dans le menu Croquis
+    -> Inclure une bibliotèque : Ajouter la bibliotèque .ZIP ...
+    Et inclure un a un les fichiers du dossier libs
+      ( AndroidAccessory.zip, arduino-libraries-CapacitiveSensor-0.5-0-g7684dff.zip et USB_Host_Shield.zip )
+
+- Ensuite il suffit d'ouvrir le sketch (), de le vérifier (CTRL+R) et de le téléverser  (CTRL+U)
