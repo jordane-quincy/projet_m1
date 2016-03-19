@@ -1,0 +1,4 @@
+<resources>
+    <!-- Selon ce qui est definit dans le sketch Arduino (chercher "AndroidAccessory")-->
+    <usb-accessory model="CoolAccessory" manufacturer="My App Company" version="1.0"/>
+</resources>
