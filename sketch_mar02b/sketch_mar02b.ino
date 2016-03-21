@@ -42,7 +42,7 @@ void loop() {
 	byte err;
 	byte idle;
 	static byte count = 0;
-	byte msg[4];
+	byte msg[1];
 	long touchcount;
   int nbBlink = 0;
 
@@ -51,7 +51,7 @@ void loop() {
     int len = acc.read(msg, sizeof(msg), 1);
     if(len > 0){
       //if some data received from the android
-      nbBlink = atoi((char*)msg[0]); //FIXME : comment récupérer l'entier au lieu du code ascii (si saisi "2" sur l'android, ne pas récuperer 50 dans nbBlink)
+      nbBlink = len; //FIXME : comment récupérer l'entier au lieu du code ascii (si saisi "2" sur l'android, ne pas récuperer 50 dans nbBlink)
       String log = String("\r\nIntegrated led will blink : ");
       log.concat(nbBlink);
       Serial.print(log);
