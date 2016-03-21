@@ -1,8 +1,11 @@
 #include <Usb.h>
 #include <AndroidAccessory.h>
-
+// include the TinkerKit library
+#include <TinkerKit.h>
 
 #define LED0_INTEGRATED 13
+
+const int PIN_EASTER_EGG = I1;
 
 AndroidAccessory acc("Google, Inc.",
 		     "DemoKit",
@@ -16,6 +19,7 @@ void loop();
 
 void init_pin(){
   pinMode(LED0_INTEGRATED, OUTPUT);
+  pinMode(PIN_EASTER_EGG, INPUT);
 }
 
 void setup() {
@@ -68,5 +72,8 @@ void loop() {
                 Serial.print("\r\nAndroid is not plugged");
 	}
 
+  Serial.print("\r\n AnalogRead(PIN_EASTER_EGG) :");
+  Serial.print(analogRead(PIN_EASTER_EGG));
+  
 	delay(1000);
 }
