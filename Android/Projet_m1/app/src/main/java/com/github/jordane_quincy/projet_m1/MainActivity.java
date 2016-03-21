@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -58,21 +59,29 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sendData();
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
 
-        Log.d(TAG, "Debut de la partie gestion usb");
+
+
+
+        //Log.d(TAG, "Debut de la partie gestion usb");
+        //Toast.makeText(getApplicationContext(), "Debut de la partie gestion usb", Toast.LENGTH_SHORT).show();
+        d(TAG, "Debut de la partie gestion usb");
 
         mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
         mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
 
-        Log.d(TAG, "enregistrement receiver");
-                registerReceiver(mUsbReceiver, filter);
-        Log.d(TAG, " receiver enregistrer");
+        d(TAG, "enregistrement receiver");
+
+        registerReceiver(mUsbReceiver, filter);
+        d(TAG, " receiver enregistrer");
+
     }
 
     @Override
@@ -97,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } else {
-            Log.d(TAG, "mAccessory is null");
+            d(TAG, "mAccessory is null");
         }
     }
 
@@ -162,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                             UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         openAccessory(accessory);
                     } else {
-                        Log.d(TAG, "permission denied for accessory "
+                        d(TAG, "permission denied for accessory "
                                 + accessory);
                     }
                     mPermissionRequestPending = false;
@@ -183,9 +192,9 @@ public class MainActivity extends AppCompatActivity {
             FileDescriptor fd = mFileDescriptor.getFileDescriptor();
             mInputStream = new FileInputStream(fd);
             mOutputStream = new FileOutputStream(fd);
-            Log.d(TAG, "accessory opened");
+            d(TAG, "accessory opened");
         } else {
-            Log.d(TAG, "accessory open fail");
+            d(TAG, "accessory open fail");
         }
     }
 
@@ -193,11 +202,41 @@ public class MainActivity extends AppCompatActivity {
         UsbAccessory usbAccessory = null;
         UsbAccessory[] usbAccessoryTab = mUsbManager.getAccessoryList();
         if(usbAccessoryTab == null){
-            Log.d("USB_CONNEXION", "usbAccessoryTab is null");
+            d("USB_CONNEXION", "usbAccessoryTab is null");
         }else{
              usbAccessory = usbAccessoryTab[0];
+            d("USB_CONNEXION", "usbAccessoryTab not null :)");
         }
 
         return usbAccessory;
+    }
+
+    // pour avoir les logs dans la console (si connecte au pc) ET sur un toast a l'ecran android (si connecte à l'arduino ou pas du tout connecte)
+    private void d(String tag, String msg){
+        Log.d(tag,msg);
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+    private void e(String tag, String msg, Throwable e){
+        Log.e(tag,msg,e);
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    public void sendData(){
+
+        d(TAG,"IN - sendData");
+        byte[] buffer = new byte[1];
+
+        buffer[0]=(byte)1; // button says off, light is on
+
+        if (mOutputStream != null) {
+            try {
+                mOutputStream.write(buffer);
+                d(TAG,"buffer sent !");
+            } catch (IOException e) {
+                e(TAG, "write failed", e);
+            }
+        }
+
+        d(TAG,"OUT - sendData");
     }
 }
